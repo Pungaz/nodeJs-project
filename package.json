@@ -1,0 +1,15 @@
+{
+  "name": "skript-projekat-1",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "express": "~4.16.1",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "joi": "^17.3.0"
+  }
+}
