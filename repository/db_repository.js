@@ -4,8 +4,8 @@ const util = require('util');
 const dbConfig = {
     host: 'localhost',
     user: 'root',
-    password: 'knje2m',
-    database: 'script'
+    password: 'root',
+    database: 'script-node'
 }
 
 function makeDb(config) {
@@ -105,4 +105,3 @@ module.exports = {
     getAllMoviesFromDb: getAllMoviesFromDb,
     insertMovieToDb: insertMovieToDb
 };
-
