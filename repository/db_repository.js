@@ -38,10 +38,10 @@ async function findUserByUsername(username) {
     }
 }
 
-async function findUserById(id) {
+async function findUserByUsernameAndPassword(username, password) {
     const db = makeDb(dbConfig);
     try {
-        const users = await db.query("SELECT * FROM user WHERE id = ?", [id]);
+        const users = await db.query("SELECT * FROM user WHERE username = ? and password = ?", [username, password]);
         for (let user in users) {
             if (users.hasOwnProperty(user)) {
                 return {
@@ -59,8 +59,8 @@ async function findUserById(id) {
 async function insertUserToDb(username, password, admin) {
     const db = makeDb(dbConfig);
     try {
-        const user = await db.query("SELECT * FROM user WHERE username = ?", [username]);
-        if (!user) {
+        const users = await db.query("SELECT * FROM user WHERE username = ?", [username]);
+        if (!users.length) {
             await db.query("INSERT INTO user (username, password, admin) VALUES (?, ?, ?)", [username, password, admin]);
         } else {
             console.log('Username taken');
@@ -154,5 +154,5 @@ module.exports = {
     insertMovieToDb: insertMovieToDb,
     insertUserToDb: insertUserToDb,
     findUserByUsername: findUserByUsername,
-    findUserById: findUserById,
+    findUserByUsernameAndPassword: findUserByUsernameAndPassword,
 };

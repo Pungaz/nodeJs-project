@@ -5,8 +5,4 @@ router.get('/', function (req, res) {
     res.send('home');
 });
 
-router.get('/users', function (req, res) {
-    res.send('home');
-});
-
 module.exports = router;

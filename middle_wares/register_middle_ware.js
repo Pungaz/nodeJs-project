@@ -6,7 +6,7 @@ const schema = Joi.object().keys({
     admin: Joi.boolean().required()
 });
 
-function addUserMiddleWare(req, res, next) {
+function registerMiddleWare(req, res, next) {
     const {error} = schema.validate(req.body);
     if (error) {
         console.log(error);
@@ -17,5 +17,5 @@ function addUserMiddleWare(req, res, next) {
 }
 
 module.exports = {
-    addUserMiddleWare: addUserMiddleWare
+    registerMiddleWare: registerMiddleWare
 };
