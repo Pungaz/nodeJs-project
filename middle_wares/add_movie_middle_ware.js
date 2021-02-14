@@ -17,5 +17,5 @@ function addMovieMiddleWare(req, res, next) {
 }
 
 module.exports = {
-    addMovieMiddleWare : addMovieMiddleWare
+    addMovieMiddleWare: addMovieMiddleWare
 };

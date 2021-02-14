@@ -20,15 +20,64 @@ function makeDb(config) {
     };
 }
 
-async function insertMovieToDb(name, status, rating, releaseDate){
+async function findUserByUsername(username) {
+    const db = makeDb(dbConfig);
+    try {
+        const users = await db.query("SELECT * FROM user WHERE username = ?", [username]);
+        for (let user in users) {
+            if (users.hasOwnProperty(user)) {
+                return {
+                    id: users[user].id,
+                    username: users[user].username,
+                    password: users[user].password,
+                }
+            }
+        }
+    } finally {
+        db.close();
+    }
+}
+
+async function findUserById(id) {
+    const db = makeDb(dbConfig);
+    try {
+        const users = await db.query("SELECT * FROM user WHERE id = ?", [id]);
+        for (let user in users) {
+            if (users.hasOwnProperty(user)) {
+                return {
+                    id: users[user].id,
+                    username: users[user].username,
+                    password: users[user].password,
+                }
+            }
+        }
+    } finally {
+        db.close();
+    }
+}
+
+async function insertUserToDb(username, password, admin) {
+    const db = makeDb(dbConfig);
+    try {
+        const user = await db.query("SELECT * FROM user WHERE username = ?", [username]);
+        if (!user) {
+            await db.query("INSERT INTO user (username, password, admin) VALUES (?, ?, ?)", [username, password, admin]);
+        } else {
+            console.log('Username taken');
+            throw new Error('Username taken');
+        }
+    } finally {
+        db.close();
+    }
+}
+
+async function insertMovieToDb(name, status, rating, releaseDate) {
     const db = makeDb(dbConfig);
     try {
         await db.query("INSERT INTO movies (name, status, rating, release_date) VALUES (?, ?, ?, ?) ", [name, status, rating, releaseDate]);
-
-
-    }catch (err){
+    } catch (err) {
         console.log(err);
-    }finally {
+    } finally {
         db.close();
     }
     console.log("Ubaceno iz DB REPO");
@@ -38,10 +87,9 @@ async function addRentingToDb(renting) {
     const db = makeDb(dbConfig)
     try {
         await db.query("UPDATE movies SET status = 'rented' WHERE id = ?", [renting.id]);
-
-    }catch (err){
+    } catch (err) {
         console.log(err)
-    }finally {
+    } finally {
         db.close();
     }
 }
@@ -103,5 +151,8 @@ module.exports = {
     addRentingToDb: addRentingToDb,
     getRentedMoviesFromDb: getRentedMoviesFromDb,
     getAllMoviesFromDb: getAllMoviesFromDb,
-    insertMovieToDb: insertMovieToDb
+    insertMovieToDb: insertMovieToDb,
+    insertUserToDb: insertUserToDb,
+    findUserByUsername: findUserByUsername,
+    findUserById: findUserById,
 };
