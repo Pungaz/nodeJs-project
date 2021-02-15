@@ -12,7 +12,15 @@ async function findRentedMovies() {
     return {rentedMovies: rentedMovies};
 }
 
+async function unRentMovie(id){
+    const idint = parseInt(id);
+    if (Number.isInteger(idint)) {
+        await repository.removeRentingFromDb({id: id});
+    }
+}
+
 module.exports = {
     rentMovie: rentMovie,
-    findRentedMovies: findRentedMovies
+    findRentedMovies: findRentedMovies,
+    unRentMovie: unRentMovie,
 }

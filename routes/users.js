@@ -9,14 +9,19 @@ router.get('/', function (req, res, next) {
     next();
 });
 
-router.get('/rented', authMiddleWare.authenticateToken, async (req, res) => {
+router.get('/rented', authMiddleWare.authenticate, async (req, res) => {
     const rentedMovies = await rentService.findRentedMovies();
     res.send(rentedMovies);
 });
 
-router.put('/rent', authMiddleWare.authenticateToken, async (req, res) => {
+router.put('/rent', authMiddleWare.authenticate, async (req, res) => {
     await rentService.rentMovie(req.query.id);
-    res.send(`Created`);
+    res.send(`Rented`);
+});
+
+router.put('/unrent', authMiddleWare.authenticate, async (req, res) => {
+    await rentService.unRentMovie(req.query.id);
+    res.send(`Unrented`);
 });
 
 module.exports = router;

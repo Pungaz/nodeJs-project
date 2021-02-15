@@ -21,7 +21,11 @@ async function login(username, password) {
         throw new Error('Wrong email or password');
     }
 
-    return jsonwebtoken.sign({username}, tokenSecret, {
+    const payload = {
+        username: user.username,
+        admin: user.admin,
+    }
+    return jsonwebtoken.sign(payload, tokenSecret, {
         algorithm: "HS256"
     });
 }

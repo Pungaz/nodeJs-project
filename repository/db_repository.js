@@ -48,6 +48,7 @@ async function findUserByUsernameAndPassword(username, password) {
                     id: users[user].id,
                     username: users[user].username,
                     password: users[user].password,
+                    admin: users[user].admin,
                 }
             }
         }
@@ -74,7 +75,7 @@ async function insertUserToDb(username, password, admin) {
 async function insertMovieToDb(name, status, rating, releaseDate) {
     const db = makeDb(dbConfig);
     try {
-        await db.query("INSERT INTO movies (name, status, rating, release_date) VALUES (?, ?, ?, ?) ", [name, status, rating, releaseDate]);
+        await db.query("INSERT INTO movies (name, status, rating, release_date, rented_count) VALUES (?, ?, ?, ?, ?) ", [name, status, rating, releaseDate, 0]);
     } catch (err) {
         console.log(err);
     } finally {
@@ -86,7 +87,18 @@ async function insertMovieToDb(name, status, rating, releaseDate) {
 async function addRentingToDb(renting) {
     const db = makeDb(dbConfig)
     try {
-        await db.query("UPDATE movies SET status = 'rented' WHERE id = ?", [renting.id]);
+        await db.query("UPDATE movies SET status = 'rented', rented_count = rented_count + 1 WHERE id = ? ", [renting.id]);
+    } catch (err) {
+        console.log(err)
+    } finally {
+        db.close();
+    }
+}
+
+async function removeRentingFromDb(renting) {
+    const db = makeDb(dbConfig)
+    try {
+        await db.query("UPDATE movies SET status = 'Nije' WHERE id = ? ", [renting.id]);
     } catch (err) {
         console.log(err)
     } finally {
@@ -107,7 +119,8 @@ async function getRentedMoviesFromDb() {
                     name: movies[movie].name,
                     status: movies[movie].status,
                     rating: movies[movie].rating,
-                    release_date: movies[movie].release_date
+                    release_date: movies[movie].release_date,
+                    rented_count: movies[movie].rented_count
                 });
             }
         }
@@ -134,7 +147,8 @@ async function getAllMoviesFromDb() {
                     name: movies[movie].name,
                     status: movies[movie].status,
                     rating: movies[movie].rating,
-                    release_date: movies[movie].release_date
+                    release_date: movies[movie].release_date,
+                    rented_count: movies[movie].rented_count
                 });
             }
         }
@@ -155,4 +169,5 @@ module.exports = {
     insertUserToDb: insertUserToDb,
     findUserByUsername: findUserByUsername,
     findUserByUsernameAndPassword: findUserByUsernameAndPassword,
+    removeRentingFromDb: removeRentingFromDb,
 };
